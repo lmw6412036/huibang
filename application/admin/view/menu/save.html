@@ -1,0 +1,62 @@
+{layout name="layout1" /}
+<article class="page-container">
+	<form class="form form-horizontal" id="form-admin-add" action="{$action}">
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('菜单名','name',$data,'请输入菜单名','text',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('菜单标识','title',$data,'请输入菜单标识','text',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('菜单地址','url',$data,'请输入菜单地址','text',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('排序','sort',$data,'请输入排序值','text');
+		{/php}
+	</div>
+	<div class="row cl">
+		{:admin_tpl_select('分类','cate',$data,$cates)}
+	</div>
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+		</div>
+	</div>
+	</form>
+</article>
+<script type="text/javascript">
+	$('#form-admin-add').validate({
+		rules:{
+			repass:{
+				equalTo:'#pass'
+			}
+		},
+		submitHandler:function(form){
+			doApi('post',form.action,{
+				data:$(form).serialize()
+			}).success(function(data){
+				showError(data);
+				if(data.code==0){
+					layer.msg('编辑成功',{
+						icon:1
+					},function(){
+						parent.location.reload();
+					})
+				}
+			});
+		}
+	});
+</script>

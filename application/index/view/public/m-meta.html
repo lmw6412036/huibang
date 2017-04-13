@@ -1,0 +1,13 @@
+<meta charset="UTF-8">
+<meta name="viewport"
+          content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<link rel="stylesheet" href="{:config('mobile')}/../dist/css/style.css"/>
+<script type="text/javascript" src="{:config('mobile')}/../dist/lib/jquery/jquery-1.12.3.min.js"></script>
+<script type="text/javascript" src="{:config('mobile')}/../dist/lib/layer/layer.js"></script>
+<script>
+    var basepath=location.protocol+'//'+location.host+'/';
+    $('html').css('fontSize',$(window).width()/16+'px');
+    var apiurl="//114.215.146.233:83";
+    var member_detail='{:url("detail?t=member")}';
+    var job_detail='{:url("detail?t=job")}';
+</script>

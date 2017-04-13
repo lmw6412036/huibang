@@ -1,0 +1,112 @@
+{layout name="layout1" /} 
+<div class="">
+	<div class="cl pd-5 bg-1 bk-gray">
+		<span class="l">
+			<a id="picker" href="javascript:;" style="display: inline-block"><i class="Hui-iconfont">&#xe600;</i> 添加图片</a>
+			<p style="display: inline-block;">
+				<select name="cate">
+					{volist name=":get_coclasses_fid(101)" id="vo"}
+					<option value="{$key}">{$vo}</option>
+					{/volist}
+				</select>
+			</p>
+		</span>
+		<span class="r">共有数据：<strong>{$list->total()}</strong> 条</span>
+	</div>
+	<table class="table table-border table-bordered table-bg">
+		<tbody>
+			{volist name="list" id="vo"}
+			<tr class="text-c">
+				<td>
+					<img height="30" src="{:config('static')}/../uploads/{$vo.url}" alt="" />
+				</td>
+				<td>{$vo.name}</td>
+				<td>{$vo.cate|get_coclass}</td>
+				<td>
+					<a href="javascript:;" onclick="admin_del(this,'{:url('delete?id='.$vo->id)}')">删除</a>
+					<a href="javascript:;" onclick="sel(this)" url='{$vo.url}' tid='{$vo.id}'>选择</a>
+				</td>
+			</tr>	
+			{/volist}
+		</tbody>
+	</table>
+	{$list->render()}
+</div>
+<link rel="stylesheet" href="{:config('hui')}/lib/webuploader/0.1.5/webuploader.css">
+<script type="text/javascript" src="{:config('hui')}/lib/webuploader/0.1.5/webuploader.js"></script>
+<script>
+	var formData ={};
+	{present name="cate"}
+		$('[name="cate"]').val('{$cate}');
+		formData.cate='{$cate}';
+	{/present}
+	var uploader = WebUploader.create({
+		//自动上传
+        auto: true,
+        // swf文件路径
+        swf: "{:config('hui')}/lib/webuploader/0.1.5"+'/Uploader.swf',
+
+        // 文件接收服务端。
+        server: "{:url('upload/save')}",
+        formData:formData,
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#picker',
+
+        // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+        resize: false
+    });
+    var loading;
+    
+    uploader.on( 'uploadSuccess', function( file,response ) {
+        //$( '#'+file.id ).find('p.state').text('已上传');
+        //console.log(response);
+        if(response.code==0){
+			layer.msg('上传成功',{
+				icon:1,time:1500
+			},function(){
+				location.reload();
+			})
+		}
+    });
+
+    uploader.on( 'uploadError', function( file ) {
+        //$( '#'+file.id ).find('p.state').text('上传出错');
+    });
+
+    uploader.on( 'uploadComplete', function( file ) {
+        //$( '#'+file.id ).find('.progress').fadeOut();
+        layer.close(loading);
+    });
+    
+    uploader.on("uploadProgress",function (file,progress) {
+    	loading=layer.load();
+    });
+
+	/*管理员-删除*/
+    function admin_del(o, url) {
+        var index = layer.confirm('确认要删除吗？', function(index) {
+            doApi('get', url, {})
+                .success(function(data) {
+                    layer.close(index);
+                    showError(data);
+                    layer.msg('删除成功', {
+                        icon: 1,
+                    }, function() {
+                        //do something
+                        location.reload();
+                    });
+                });
+
+        })
+    }
+
+    //alert('{$callback}');
+    function sel(obj) {
+		var url=$(obj).attr('url');
+        var tid=$(obj).attr('tid');
+		parent.{$callback}(url,tid);
+		layer_close();
+    }
+    
+</script>

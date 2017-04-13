@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>
+			{$data->name} - 触屏版
+		</title>
+		<meta name="author" content="m.jd.com">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no">
+
+		<link rel="stylesheet" type="text/css" href="{:config('mobile')}/css/base2013.css"/>
+
+		<link rel="stylesheet" type="text/css" href="{:config('mobile')}/css/2013/ware/view.css" />
+
+		<link rel="apple-touch-icon-precomposed" href="" />
+		<script type="text/javascript">
+			var _winLocation = window.location.href; //获得当前页面的路径，根据路径规则进行逐页替换
+			var _isWebKit = '__proto__' in {}; //是否是webkit内核
+			if(_isWebKit) { //如果是webkit内核，则分模块使用zepto
+				//要使用zeptojs的路径列表，可以做为分模块替换的开关
+				var _locationList = new Array();
+				//活动模块
+				_locationList.push('../activity/proActList');
+				_locationList.push('../activity/proActWareList');
+				_locationList.push('../activity/list');
+				//商品分类模块
+				_locationList.push('../category/');
+				//京东快讯模块
+				_locationList.push('../newslist.html');
+				_locationList.push('../newslist/');
+				_locationList.push('../news/');
+				//机票模块
+				_locationList.push('../airline/');
+				//酒店模块
+				_locationList.push('../hotel/');
+				//团购模块
+				_locationList.push('../tuan/');
+				//首页相关
+				_locationList.push('../hotbrand.html'); //品牌馆
+				//商品筛选相关
+				_locationList.push('../ware/expandSort.action');
+				_locationList.push('../ware/categoryFilter.action');
+				_locationList.push('../ware/search.action');
+				_locationList.push('../products/');
+
+				_locationList.push('../notice/'); //通告模块
+				_locationList.push('../coupons/'); //随地惠模块
+				_locationList.push('../chongzhi/'); //手机充值模块
+				_locationList.push('../comment/'); //手机推荐模块
+				_locationList.push('../pay/'); //支付
+				_locationList.push('../order/'); //订单
+				var _needReplace = false;
+				//如果当前路径符合要使用的路径规则，则进行替换
+				for(var i = 0; i < _locationList.length; i++) {
+					if(_winLocation.indexOf(_locationList[i]) != -1) {
+						_needReplace = true;
+						break;
+					}
+				}
+				//如果是首页的话，则使用zepto
+				var _tmp = _winLocation.replace(/(^http:\/\/)|(\/*$)/g, '');
+				if(_tmp.indexOf('/') < 0 || (_tmp.split('/').length <= 2 && _tmp.indexOf('/index') >= 0)) {
+					_needReplace = true;
+				}
+				//如果是商品详情页的话，则使用zepto
+				var _dlocationList = new Array();
+				_dlocationList.push(/\/product\/([0-9]+)\.html/);
+				_dlocationList.push(/\/orderComment\/([0-9]+)\.html/);
+				_dlocationList.push(/\/consultations\/([0-9]+)\.html/);
+				_dlocationList.push(/\/consultations\/([0-9]+)-([0-9]+)\.html/);
+				_dlocationList.push(/\/comments\/([0-9]+)\.html/);
+				for(var i = 0, len = _dlocationList.length; i < len; i++) {
+					if(_dlocationList[i].test(_winLocation)) {
+						_needReplace = true;
+						break;
+					}
+				}
+				if(_needReplace) {
+					document.write('<script src="{:config('mobile')}/js/zepto.min.js"><\/script>');
+					document.write('<script type="text/javascript">window.jQuery=window.Zepto;<\/script>');
+				} else {
+					document.write('<script src="{:config('mobile')}/js/jquery-1.6.2.min.js"><\/script>');
+				}
+			} else { //如果是非webkit内核直接使用jquery
+				document.write('<script src="{:config('mobile')}/js/jquery-1.6.2.min.js"><\/script>');
+			}
+		</script>
+		<script type="text/javascript" src="{:config('mobile')}/js/html5/common.js"></script>
+		<script type="text/javascript" src="{:config('mobile')}/js/html5/spin.min.js"></script>
+		<style type="text/css">
+			h1{
+				line-height: 1.5;
+				padding: 10px;
+			}
+			.content{
+				color: #666;
+				
+				padding: 10px;
+				text-indent: 2em;
+				line-height: 1.5;
+			}
+		</style>
+	</head>
+
+	<body id="body">
+		<a name="top"></a>
+		<header>
+			<div class="new-header">
+				<a href="javascript:pageBack();" class="new-a-back" id="backUrl"><span>返回</span></a>
+				<h2>新闻详情</h2>
+				<a href="javascript:void(0)" id="btnJdkey" class="new-a-jd"><span>京东键</span></a>
+			</div>
+			<div class="new-jd-tab" style="display:none" id="jdkey">
+				<div class="new-tbl-type">
+					<a href="#" class="new-tbl-cell">
+						<span class="icon">首页</span>
+						<p style="color:#6e6e6e;">首页</p>
+					</a>
+					<a href="#" class="new-tbl-cell">
+						<span class="icon2">分类</span>
+						<p style="color:#6e6e6e;">分类</p>
+					</a>
+					<a href="#" id="html5_cart" class="new-tbl-cell">
+						<span class="icon3">视频</span>
+						<p style="color:#6e6e6e;">视频</p>
+					</a>
+					<a href="#" class="new-tbl-cell">
+						<span class="icon4">我的</span>
+						<p style="color:#6e6e6e;">我的</p>
+					</a>
+				</div>
+			</div>
+		</header>
+		<!--<script type="text/javascript" src="{:config('mobile')}/js/2013/ware/view.js@v=20140318102290"></script>-->
+		<!--<script type="text/javascript" src="{:config('mobile')}/js/2013/ware/newView.js@v=201403181290"></script>-->
+		<div id="mainLayout">
+			<h1>{$data.name}</h1>
+			<div class="content">
+				{$data.news.content}
+			</div>
+			<!--<div id="showassess" style="margin-bottom: 20px;-webkit-box-flex: 1;width: 100%;display: none!important;">
+				<div class="new-ct">
+					<div class="new-goods-details" id="_assessContent">
+
+						<div class="new-gd-introduce">
+							<div class="new-fl w56 new-mg-r12">
+								<span class="new-span-block"><span class="new-txt36" id="_assessScale">0</span><span class="new-txt-sign">%</span></span>
+								<span class="new-span-block new-mg-t5">好评度</span>
+							</div>
+							<div class="new-gd-txt3">
+								<span class="new-span-block" id="_btnGoodScale"><span>好评</span><span class="new-txtb8" id="_goodScale">（0%）</span><span class="new-gd-bar new-mg-l12"><span style="width:0%" id="_goodScaleImg"></span></span>
+								</span>
+								<span class="new-span-block" id="_btnMediumScale"><span>中评</span><span class="new-txtb8" id="_mediumScale">（0%）</span><span class="new-gd-bar new-mg-l12"><span style="width:0%" id="_mediumScaleImg"></span></span>
+								</span>
+								<span class="new-span-block" id="_btnGoodScale"><span>差评</span><span class="new-txtb8" id="_badScale">（0%）</span><span class="new-gd-bar new-mg-l12"><span style="width:0%" id="_badScaleImg"></span></span>
+								</span>
+							</div>
+							<div class="new-estimate new-tbl-type new-mg-t15">
+								<div class="new-tbl-cell on" id="_tabGoodScale" onclick="changeAssessType(this)">
+									<span>好评</span><span id="goodNum">0</span>
+								</div>
+								<div class="new-tbl-cell" id="_tabMediumScale" onclick="changeAssessType(this)">
+									<span>中评</span><span id="mediumNum">0</span>
+								</div>
+								<div class="new-tbl-cell" id="_tabBadScale" onclick="changeAssessType(this)">
+									<span>差评</span><span id="badNum">0</span>
+								</div>
+							</div>
+						</div>
+
+						<div id="_assessItem">
+						</div>
+
+					</div>
+				</div>
+
+				<div class="new-paging" id="_assessPage">
+				</div>
+
+			</div>-->
+		</div>
+		<!--<span class="pop-attention" style="position:absolute;z-index:9999;display:none" id="save">
+ 	<span class="icon-succ" id="guanzhu">关注成功</span>
+		</span>-->
+
+		<!--<div class="new-gd-view-img" id="popImg" style="position:absolute;display:none;z-index:9000" onclick="hidePop()">
+			<div class="new-banner new-p-re">
+				<ul class="new-tbl-type" style="position:absolute;margin-left:0" id="bigImgSlider">
+					<li class="new-tbl-cell">
+						<a href="javascript:void(0)"><span class="new-shade-img"><img src="http://img13.360buyimg.com/n1/g10/M00/05/12/rBEQWFEtb78IAAAAAAWca7l6fjYAABFowBCPIEABZyD393.jpg!q70.jpg" width="300" height="300" alt=""></span></a>
+					</li>
+				</ul>
+				<ul class="new-banner-num new-tbl-type" id="bigImgSliderPage">
+				</ul>
+			</div>
+		</div>-->
+
+		<!--<div id="yuyuecart" style="width:100%;position:fixed;bottom:0;display:none">
+			<div class="tbl-type detail-tbn2">
+				<div class="tbl-cell">
+					<a class="btn-cart" data id="cartyuyue"><span></span>加入购物车</a>
+				</div>
+			</div>
+		</div>-->
+
+		<!--<div id="yuyueing" style="width:100%;position:fixed;bottom:0;display:none">
+			<div class="tbl-type detail-tbn2">
+				<div class="tbl-cell">
+					<a class="btn-yuyue" data><span class="icon-clock"></span><span id="yuyuetime"></span><span class="txt-yuyue" id="yuyuecontext"><span></span>开始预约</span>
+					</a>
+				</div>
+			</div>
+		</div>-->
+
+		<!--<div id="yuyuenow" style="width:100%;position:fixed;bottom:0;display:none">
+			<div class="tbl-type detail-tbn2">
+				<div class="tbl-cell">
+					<a class="btn-yuyue2" href="#" id="nowyuyue"><span class="icon-clock"></span><span class="txt-yuyue" id="yuyuenowcontext"><span></span>立即预约</span>
+					</a>
+				</div>
+			</div>
+		</div>-->
+
+		<!--<div id="yuyueend" style="position:fixed;bottom:0;display:none">
+			<div class="tbl-type detail-tbn2">
+				<div class="tbl-cell">
+					<a class="btn-yuyue2"><span class="icon-clock"></span><span class="txt-yuyue" id="yuyueendcontext"><span></span></span>
+					</a>
+				</div>
+			</div>
+		</div>-->
+		<!--<div class="pop" style="position:absolute;z-index:9999;display:none" id="tip">
+			<p><span class="pop-txt"></span>
+			</p>
+			<div class="pop-txt-area">
+				<span class="pop-txt2" id="tips">
+    		</span>
+			</div>
+			<div class="tbl-type">
+				<a href="javascript:void(0)" onclick="$('#tip').hide();$('#_mask').hide();" class="tbl-cell" style="width:50%">知道啦</a>
+				<a href="javascript:void(0)" id="myyuyue" class="tbl-cell" style="width:50%">我的预约</a>
+			</div>
+		</div>-->
+
+		<input type="hidden" id="currentWareId" value="1016292843" />
+		<input type="hidden" id="sid" value="e0d0f025d6d3e8e8d7be5428c43ef911" />
+		<input type="hidden" id="resourceType" value="index_promotion" />
+		<input type="hidden" id="resourceValue" value="f1" />
+		<input type="hidden" id="stockFlag" value="true" />
+		<input type="hidden" id="teamSign" value="0" />
+		<input type="hidden" id="imgUrl" value="http://img13.360buyimg.com/n5/g10/M00/05/12/rBEQWFEtb78IAAAAAAWca7l6fjYAABFowBCPIEABZyD393.jpg!q70.jpg" />
+		<input type="hidden" id="goodName" name="goodName" value="香织恋蝶 浪漫LOVE熊抱心熊泰迪熊抱抱熊毛绒玩具布娃娃公仔玩偶 粉红色 1米" />
+		<input type="hidden" id="jdPrice" name="jdPrice" value="98.00" />
+		<input type="hidden" id="jshop" value="" />
+		<input type="hidden" id="passportUse" value="false" />
+		<input type="hidden" id="yuyueType" value="5" />
+		<script>
+			var time, type;
+
+			$(function() {
+				if('true' == 'false') {
+					$('#cart1').css("display", "none");
+				} else if(!(true && true && 98.00 > 0)) {
+					$('#add_cart').addClass('btn-cart-def');
+					$('#directorder').addClass('btn-buy-def');
+					$("#add_cart").unbind('click');
+					$("#directorder").unbind('click');
+				} else {
+					$('#add_cart').removeClass('btn-cart-def');
+					$('#directorder').removeClass('btn-buy-def');
+				}
+
+				type = $('#yuyueType').val();
+				switch(type) {
+					case '1':
+						$('#yuyueing').find('.btn-yuyue').attr('data', '1');
+						$('#yuyuecontext').text('\u5f00\u59cb\u9884\u7ea6');
+						$('#yuyueing').show();
+						time = new Date().getTime() / 1000 + parseInt('-1'.length > 0 ? '-1' : 0);
+						getTimes();
+						break
+					case '2':
+						$('.btn-yuyue2').attr('data', '2');
+						$('#yuyuenow').show();
+						$('#yuyuenow').css("display", "block");
+						time = new Date().getTime() / 1000 + parseInt('-1'.length > 0 ? '-1' : 0);
+						getTimes();
+						break
+					case '3':
+						$('#yuyueing').find('.btn-yuyue').attr('data', '3');
+						$('#yuyuecontext').text('\u5f00\u59cb\u62a2\u8d2d');
+						if('-1'.length > 0) {
+							time = new Date().getTime() / 1000 + parseInt('-1'.length > 0 ? '-1' : 0);
+							getTimes();
+						} else {
+							$('#yuyuetime').text('\u62a2\u8d2d\u672a\u5f00\u59cb\uff0c\u656c\u8bf7\u5173\u6ce8');
+							$('#yuyuecontext').empty();
+						}
+						$('#yuyueing').show();
+						break
+					case '4':
+						$('#yuyuecart').show();
+						$('#cartyuyue').attr('data', '4');
+						time = new Date().getTime() / 1000 + parseInt('-1'.length > 0 ? '-1' : 0);
+						getTimes();
+						break
+					case '5':
+						if('true' == 'false') {
+							$('#yuyueendcontext').text('\u62a2\u8d2d\u5df2\u7ed3\u675f');
+							$('#yuyueend').css("display", "block");
+						} else {
+							$('#cart1').css("display", "table");
+							$('#add_cart').removeClass('btn-cart-def');
+							$('#directorder').removeClass('btn-buy-def');
+						}
+						break
+					default:
+						$('#cart1').css("display", "table");
+						$('#add_cart').removeClass('btn-cart-def');
+						$('#directorder').removeClass('btn-buy-def');
+				}
+
+				var pid = $('#currentWareId').val();
+
+				/*var url = "../../chat1.jd.com/api/checkChat@pid=" + pid + "&entry=m_item&returnCharset=gb2312&callback=?";
+				if(true) {
+					jQuery.getJSON(url, doResult);
+				}*/
+
+				function doResult(json) {
+					if((!json || !json.code) && ('' == '')) {
+						$('#jshopAndIm').css('display', 'none');
+						return
+					}
+					if(!json || !json.code) {
+						return;
+					}
+					var code = json.code;
+					if(code == 1) {
+						if($('#currentWareId').val() < 1000000000) {
+							$('#kefu').show();
+							$('#im').addClass("btn-call-def");
+						} else {
+							$('#kefu').show();
+							//var url = "../../im.m.jd.com/merchant/index@v=6&sku=" + $('#currentWareId').val() + "&imgUrl=" + $('#imgUrl').val() + "&goodName=" + encodeURIComponent(encodeURIComponent($("#goodName").val())) + "&jdPrice=" + $('#jdPrice').val() + "&sid=" + $('#sid').val();
+							//$('#im').attr('href', url);
+						}
+					} else if(code == 2 || code == 3 || code == 9) {
+						$('#kefu').show();
+						$('#im').addClass("btn-call-def");
+					} else if('' == '') {
+						$('#jshopAndIm').css('display', none);
+					}
+				}
+
+				$('#kucun').bind("click", function() {
+					if($('#select').attr("data") == 'none') {
+						$('#select').css("display", "block");
+						$('#select').attr("data", "block")
+						$('#kucun').removeClass("on");
+					} else {
+						$('#select').css("display", "none");
+						$('#select').attr("data", "none")
+						$('#kucun').addClass("on");
+					}
+				});
+
+				if(window.localStorage) {
+					//addLocalStorage($('#currentWareId').val());
+				}
+				$('footer').css('visibility', 'hidden');
+			})
+		</script>
+
+		<div class="login-area" id="footer">
+			<div class="login">
+				<a href="#">登录</a><span class="lg-bar">|</span>
+				<a href="#">注册</a>
+				<span class="new-fr"><a href="#">反馈</a><span class="lg-bar">|</span>
+				<a href="#top">回到顶部</a>
+				</span>
+			</div>
+			<div class="version">
+				<a href="#">标准版</a>
+				<a href="javascript:void(0)" class="on">触屏版</a>
+				<a href="#" id="toPcHome">电脑版</a>
+			</div>
+			<div class="copyright">&copy; m.qd.com </div>
+		</div>
+		<script type="text/javascript">
+			$("#unsupport").hide();
+			if(!testLocalStorage()) { //not support html5
+				if(0 != 0 && !$clearCart && !$teamId) {
+					$("#html5_cart_num").text(0 > 0 > 0);
+				}
+			} else {
+				updateToolBar('');
+			}
+
+			$("#html5_cart").click(function() {
+				//	syncCart('e0d0f025d6d3e8e8d7be5428c43ef911',true);
+				//location.href = '../cart/cart.action';
+			});
+
+			function reSearch() {
+				/*var depCity = window.sessionStorage.getItem("airline_depCityName");
+				if(testSessionStorage() && isNotBlank(depCity) && !/^\s*$/.test(depCity) && depCity != "") {
+					var airStr = '<form action="../airline/list.action" method="post" id="reseach">' +
+						'<input type="hidden" name="sid"  value="e0d0f025d6d3e8e8d7be5428c43ef911"/>' +
+						'<input type="hidden" name="depCity" value="' + window.sessionStorage.getItem("airline_depCityName") + '"/>' +
+						'<input type="hidden" name="arrCity" value="' + window.sessionStorage.getItem("airline_arrCityName") + '"/>' +
+						'<input type="hidden" name="depDate" value="' + window.sessionStorage.getItem("airline_depDate") + '"/>' +
+						'<input type="hidden" name="depTime" value="' + window.sessionStorage.getItem("airline_depTime") + '"/>' +
+						'<input type="hidden" name="classNo" value="' + window.sessionStorage.getItem("airline_classNo") + '"/>' +
+						'</form>';
+					$("body").append(airStr);
+					$("#reseach").submit();
+				} else {
+					window.location.href = '../airline/index.action@sid=e0d0f025d6d3e8e8d7be5428c43ef911';
+				}*/
+			}
+			//banner 关闭点击
+			/*$('.div_banner_close').click(function() {
+				$('#div_banner_header').unbind('click');
+				jQuery.post('../index/addClientCookieVal.json', function(d) {
+					$('#div_banner_header').slideUp(500);
+				});
+			});*/
+			//banner 下载点击
+			/*$('.div_banner_download').click(function() {
+				var downloadUrl = $(this).attr('url');
+				jQuery.post('../index/addClientCookieVal.json', function(d) {
+					window.location.href = downloadUrl;
+				});
+			});*/
+		</script>
+	</body>
+
+</html>

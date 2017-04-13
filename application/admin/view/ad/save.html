@@ -1,0 +1,88 @@
+{layout name="layout1" /}
+<article class="page-container">
+	<form class="form form-horizontal" id="form-admin-add" action="{$action}">
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('广告位名称','name',$data,'请输入广告位名称','text',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('地址','url',$data,'请输入地址','text',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{:admin_tpl_select('位置','type',$data,$pos)}
+	</div>
+	<div class="row cl">
+		{:admin_tpl_upload('图片','thumb_id',$data)}
+		<!--<style type="text/css">
+			.scan{
+				padding-top: 5px;
+				display: none;
+				position: relative;
+			}
+			.scan ul{
+				position: absolute;
+				width: 100%;
+				left: 0;
+				bottom: 0;
+				overflow: hidden;
+			}
+			.scan li{
+				float: left;
+				padding:0 10px;
+				background-color:rgba(0,0,0,.5);
+				line-height: 30px;
+				text-align: center;
+			}
+			.scan li a{
+				color: white;
+			}
+		</style>
+		<div class="scan">
+			<input type="hidden" name="">
+			<img src="" width="200" alt="">
+			<ul>
+				<li><a onclick="delscan(this)">删除</a></li>
+			</ul>
+		</div>
+		<script>
+			function delscan(obj){
+			    $(".scan input").val('');
+				$(".scan img").attr('src','');
+				$('.scan').hide();
+			}
+		</script>-->
+
+	</div>
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+		</div>
+	</div>
+	</form>
+</article>
+<script type="text/javascript">
+	$('#form-admin-add').validate({
+		submitHandler:function(form){
+			doApi('post',form.action,{
+				data:$(form).serialize()
+			}).success(function(data){
+				showError(data);
+				if(data.code==0){
+					layer.msg('编辑成功',{
+						icon:1
+					},function(){
+						parent.location.reload();
+					})
+				}
+			});
+		}
+	});
+</script>

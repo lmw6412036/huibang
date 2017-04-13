@@ -1,0 +1,95 @@
+{layout name="layout1" /}
+<article class="page-container">
+	<form class="form form-horizontal" id="form-admin-add" action="{$action}">
+		<input type="hidden" name="model" value="{$Request.param.model}" />
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('名称','name',$data,'请输入名称','text',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	{if condition="$model eq 'job'"}
+	<div class="row cl">
+			{include file='public/cateSelect' label="职业分类" name="type" value="$type" showvalue="$typetext" type='job'}
+		</div>
+	<div class="row cl">
+			{include file='public/memberSelect' label="所属企业" name="company" value="$company" showvalue="$companytext" type='company'}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_select('社保','sb',$data,$sb,[
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_select('包吃住','bcz',$data,$bcz,[
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_select('待遇','salary',$data,get_coclasses_fid(78),[
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_select('地区','area',$data,get_coclasses_fid(1),[
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_select('经验','workyear',$data,get_coclasses_fid(87),[
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_upload('缩略图','thumb_id',$data,['cate'=>108]);
+		{/php}
+	</div>
+	{/if}
+	
+	{if condition="$model eq 'news'"}
+	<div class="row cl">
+			{include file='public/cateSelect' label="新闻分类" name="cate" value="$cate" showvalue="$catename" type='news'}
+		</div>
+	{/if}
+	<div class="row cl">
+		{php}
+		echo admin_tpl_html('简介','content',$data);
+		{/php}
+	</div>
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+		</div>
+	</div>
+	</form>
+</article>
+<script type="text/javascript">
+	$('#form-admin-add').validate({
+		rules:{
+			repass:{
+				equalTo:'#pass'
+			}
+		},
+		submitHandler:function(form){
+			doApi('post',form.action,{
+				data:$(form).serialize()
+			}).success(function(data){
+				showError(data);
+				if(data.code==0){
+					layer.msg('编辑成功',{
+						icon:1
+					},function(){
+						parent.location.reload();
+					})
+				}
+			});
+		}
+	});
+</script>

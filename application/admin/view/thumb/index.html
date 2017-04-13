@@ -1,0 +1,80 @@
+{layout name="layout1" /} 
+{include file="public/nav" f='系统管理' s='附件管理'/}
+
+<div class="page-container">
+	{literal}
+	<div class="text-c"> 日期范围：
+		<input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin" class="input-text Wdate" style="width:120px;"> -
+		<input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d'})" id="datemax" class="input-text Wdate" style="width:120px;">
+		<input type="text" class="input-text" style="width:250px" placeholder="输入管理员名称" id="" name="">
+		<button type="submit" class="btn btn-success" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜用户</button>
+	</div>
+	{/literal}
+	<div class="cl pd-5 bg-1 bk-gray mt-20">
+		<span class="l">
+			
+		</span>
+		<span class="r">共有数据：<strong>{$list->total()}</strong> 条</span>
+	</div>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr>
+				<th scope="col" colspan="6">菜单列表</th>
+			</tr>
+			<tr class="text-c">
+				<th width="25"><input type="checkbox" name="" value=""></th>
+				<th width="40">ID</th>
+				<th width="200">图片</th>
+				<th width="100">名称</th>
+				<th width="100">分类</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{volist name="list" id="vo"}
+			<tr class="text-c">
+				<td>
+					<input type="checkbox" name="ids" value="{$vo.id}">
+				</td>
+				<td>
+					{$vo.id}
+				</td>
+				<td>
+					<img height="30" src="{:config('static')}/../uploads/{$vo.url}" alt="" />
+				</td>
+				<td>{$vo.name}</td>
+				<td>{$vo.cate|get_coclass}</td>
+				<td>
+					<a href="javascript:;" onclick="admin_del(this,'{:url('upload/delete?id='.$vo->id)}')">删除</a>
+					<a href="javascript:;" onclick="admin_edit(this,'{:url('edit?id='.$vo->id)}')">编辑</a>
+				</td>
+			</tr>	
+			{/volist}
+		</tbody>
+	</table>
+	{$list->render()}
+</div>
+
+<script>
+    function admin_edit(o,url){
+    	layer_show('编辑附件',url);
+    }
+
+	/*管理员-删除*/
+    function admin_del(o, url) {
+        var index = layer.confirm('确认要删除吗？', function(index) {
+            doApi('get', url, {})
+                .success(function(data) {
+                    layer.close(index);
+                    showError(data);
+                    layer.msg('删除成功', {
+                        icon: 1,time:1500
+                    }, function() {
+                        //do something
+                        location.reload();
+                    });
+                });
+
+        })
+    }
+</script>

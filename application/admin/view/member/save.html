@@ -1,0 +1,180 @@
+{layout name="layout1" /}
+<article class="page-container">
+	<form class="form form-horizontal" id="form-admin-add" action="{$action}">
+		<input type="hidden" name="type" value="{$type}" />
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('账户名','name',$data,'请输入账户名','text',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	{if condition='stristr($action,"save")'}
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('密码','pass',$data,'请输入密码','password',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('确认密码','repass',$data,'请确认密码','password',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	{/if}
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('邮箱','email',$data,'请输入邮箱','text',[
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('手机号','phone',$data,'请输入手机号','text',[
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_upload('头像','thumb',$data,[
+		'cate'=>105
+		]);
+		{/php}
+	</div>
+
+	{if condition="$type eq 'company'"}
+	<div class="row cl">
+		{php}
+		echo admin_tpl_upload('详情页banner','banner',$data,[
+		'cate'=>110
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_textarea('简单描述','des',$data,['total'=>1000]);
+		{/php}
+	</div>
+	{/if}
+	
+	{if condition="$type eq 'professor'"}
+	<div class="row cl">
+		{php}
+		echo admin_tpl_select('职业类型','szctype',$data,get_coclasses_fid(53));
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_select('区域','area',$data,get_coclasses_fid(58));
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('服务价格','price',$data,'请输入服务价格','text',[
+			
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_textarea('简单描述','des',$data,['total'=>1000]);
+		{/php}
+	</div>
+	{/if}
+	
+	{if condition="$type eq 'people'"}
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('性别','sex',$data,'请输入性别','text',[
+			
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('年龄','age',$data,'请输入年龄','text',[
+			
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_select('学历','edu',$data,get_coclasses_fid(95),[
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_select('地区','area',$data,get_coclasses_fid(1),[
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_select('期望待遇','salary',$data,get_coclasses_fid(78),[
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_select('工作经验','workyear',$data,get_coclasses_fid(87),[
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_textarea('一句话愿望','des',$data,['total'=>1000]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_textarea('视频代码','video',$data,[
+			'placeholder'=>'请输入优酷等视频代码',
+			'total'=>1000
+		]);
+		{/php}
+	</div>
+	{/if}
+	
+	<div class="row cl">
+		{include file="public/form/checkbox" label="推荐位" name="pos" value='data' data='pos'/}
+	</div>
+	
+	<div class="row cl">
+		{php}
+		echo admin_tpl_html('详细介绍','content',$data);
+		{/php}
+	</div>
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+		</div>
+	</div>
+	</form>
+</article>
+<script type="text/javascript">
+	$('#form-admin-add').validate({
+		rules:{
+			repass:{
+				equalTo:'#pass'
+			}
+		},
+		submitHandler:function(form){
+			doApi('post',form.action,{
+				data:$(form).serialize()
+			}).success(function(data){
+				showError(data);
+				if(data.code==0){
+					layer.msg('编辑成功',{
+						icon:1
+					},function(){
+						parent.location.reload();
+					})
+				}
+			});
+		}
+	});
+</script>

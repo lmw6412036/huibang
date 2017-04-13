@@ -1,0 +1,96 @@
+{layout name="layout1" /}
+<article class="page-container">
+	<form class="form form-horizontal" id="form-admin-add" action="{$action}">
+			
+		<div class="row cl">
+			{php} echo admin_tpl_input('名称','name',$data,'请输入名称','text',[ 'required'=>true ]); {/php}
+		</div>
+		<div class="row cl">
+			{php} echo admin_tpl_select('分类','cate',$data,get_coclasses_fid(101),[]); {/php}
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">
+				图片：
+			</label>
+			<div class="formControls col-xs-4 col-sm-5">
+				<input type="hidden" name="url" value="{$data.url}" />
+				<img width="80%" src="{:config('static')}/../uploads/{$data.url}" alt="" />
+			</div>
+			<div class="formControls col-xs-4 col-sm-4">
+				<a id="picker" href="javascript:;" style="display: inline-block"><i class="Hui-iconfont">&#xe600;</i> 添加图片</a>	
+			</div>
+			
+		</div>
+		
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+<link rel="stylesheet" href="{:config('hui')}/lib/webuploader/0.1.5/webuploader.css">
+<script type="text/javascript" src="{:config('hui')}/lib/webuploader/0.1.5/webuploader.js"></script>
+<script type="text/javascript">
+	var uploader = WebUploader.create({
+		//自动上传
+        auto: true,
+        // swf文件路径
+        swf: "{:config('hui')}/lib/webuploader/0.1.5"+'/Uploader.swf',
+
+        // 文件接收服务端。
+        server: "{:url('upload/save?onlyup=1')}",
+
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#picker',
+
+        // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+        resize: false
+    });
+    var loading;
+    uploader.on( 'uploadSuccess', function( file,response ) {
+        //$( '#'+file.id ).find('p.state').text('已上传');
+        //console.log(response);
+        if(response.code==0){
+			layer.msg('上传成功',{
+				icon:1,time:1500
+			},function(){
+				$("form img").attr('src','{:config("static")}/../uploads/'+response.url);
+				$('[name="url"]').val(response.url);
+			})
+		}
+    });
+
+    uploader.on( 'uploadError', function( file ) {
+        //$( '#'+file.id ).find('p.state').text('上传出错');
+    });
+
+    uploader.on( 'uploadComplete', function( file ) {
+        //$( '#'+file.id ).find('.progress').fadeOut();
+        layer.close(loading);
+    });
+    
+    uploader.on("uploadProgress",function (file,progress) {
+    	loading=layer.load();
+    });
+	
+	
+	$('#form-admin-add').validate({
+		submitHandler: function(form) {
+			doApi('post', form.action, {
+				data: $(form).serialize()
+			}).success(function(data) {
+				showError(data);
+				if(data.code == 0) {
+					layer.msg('编辑成功', {
+						icon: 1
+					}, function() {
+						parent.location.reload();
+					})
+				}
+			});
+		}
+	});
+</script>

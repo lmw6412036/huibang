@@ -1,0 +1,70 @@
+{layout name="layout1" /}
+<article class="page-container">
+	<form class="form form-horizontal" id="form-admin-add" action="{$action}">
+		<input type="hidden" name="model_id" value="{$table.id}"/>
+		<input type="hidden" name="model_title" value="{$table.title}"/>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('字段名','name',$data,'请输入字段名','text',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('字段标识','title',$data,'请输入字段标识','text',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_select('字段类型','type',$data,$fieldtypes,[
+		'placeholder'=>'请输入字段标识'
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('字段排序','sort',$data,'请输入字段排序','text',[]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('字段默认值','value',$data,'请输入字段默认值','text',[]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_textarea('参数','params',$data,[
+			'placeholder'=>'字段类型选择单选、多选、下拉'
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+		</div>
+	</div>
+	</form>
+</article>
+<script type="text/javascript">
+	$('#form-admin-add').validate({
+		rules:{
+			title:"isEnglish"
+		},
+		submitHandler:function(form){
+			doApi('post',form.action,{
+				data:$(form).serialize()
+			}).success(function(data){
+				if(data.code==0){
+					layer.msg('编辑成功',{
+						icon:1
+					},function(){
+						parent.location.reload();
+					})
+				}
+			});
+		}
+	});
+</script>

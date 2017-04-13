@@ -1,0 +1,47 @@
+<script type="text/javascript" src="{$Think.config.hui}/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="{$Think.config.hui}/lib/layer/2.1/layer.js"></script> 
+<script type="text/javascript" src="{$Think.config.hui}/lib/jquery.contextmenu/jquery.contextmenu.r2.js"></script> 
+<script type="text/javascript" src="{$Think.config.hui}/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="{$Think.config.hui}/lib/jquery.validation/1.14.0/jquery.validate.min.js"></script> 
+<script type="text/javascript" src="{$Think.config.hui}/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="{$Think.config.hui}/lib/jquery.validation/1.14.0/messages_zh.min.js"></script> 
+<script type="text/javascript" src="{$Think.config.hui}/static/h-ui/js/H-ui.js"></script> 
+<script type="text/javascript" src="{$Think.config.hui}/static/h-ui.admin/js/H-ui.admin.js"></script>
+<script>
+	$.validator.setDefaults({
+		errorPlacement:function(error,element){
+			console.log("error",error);
+			layer.msg(error.text());
+		}
+	});
+</script>
+<script type="text/javascript">
+	function showError(data){
+		if(data.code!=0){
+			layer.msg(data.msg);
+		}
+	}
+	
+	function doApi(type,url,opt){
+		var loading=null;
+		var defaults={
+			type:type,
+			async:true,
+			url:url,
+			dataType:'json',
+			beforeSend:function(){
+				loading=layer.load();
+			},
+			complete:function(xhr){
+				var responseText=xhr.responseText;
+				var response=eval('('+responseText+')');
+				if(response.code!=0){
+					layer.msg(response.msg);
+				}
+				layer.close(loading);
+			}
+		};
+		var conf=$.extend({},defaults,opt);
+		return $.ajax(conf);
+	}
+</script>

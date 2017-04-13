@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>餐帮派-青岛本地餐饮综合服务平台</title>
+	{include file='public/m-meta'/}
+</head>
+<body>
+<!--main start-->
+
+<div class="index">
+    <div class="banner swiper-container  component_banner"></div>
+    <div class="nav">
+        <ul>
+            <li class="job" onclick="location.href='{:url('job')}'">
+                <div class="icon font">&#xe603;</div>
+                <div class="text">找工作</div>
+            </li>
+            <li class="people" onclick="location.href='{:url('people')}'">
+                <div class="icon font">&#xe607;</div>
+                <div class="text">找人才</div>
+            </li>
+            <li class="my">
+                <div class="icon font">&#xe6b1;</div>
+                <div class="text">我的</div>
+            </li>
+        </ul>
+    </div>
+    <div class="hot">
+        <h3>--名企推荐--</h3>
+        <ul></ul>
+    </div>
+</div>
+<script type="text/javascript" src="{:config('mobile')}/../dist/lib/swiper/swiper.min.js"></script>
+<link rel="stylesheet" href="{:config('mobile')}/../dist/lib/swiper/swiper.min.css">
+<script type="text/javascript" src="{:config('mobile')}/../dist/js/index.dist.js"></script>
+
+<!--main end-->
+</body>
+</html>

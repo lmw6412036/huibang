@@ -1,0 +1,22 @@
+<label class="form-label col-xs-4 col-sm-3">
+				[label]：
+			</label>
+<div class="formControls col-xs-8 col-sm-9">
+	{volist id='vo' name='$[data]'}
+	<span>
+		<input type="checkbox" name="[name][]" value="{$key}" id="id{$key}"/>
+		<label for="id{$key}">{$vo}</label>
+	</span>
+	{/volist}
+</div>
+<script>
+	var cvalue='{$[value]|json_encode}';
+	cvalue=JSON.parse(cvalue);
+	console.log('cvalue',cvalue);
+	if(typeof cvalue.[name]=="string"&&cvalue.[name]!=""){
+		var arr=cvalue.[name].split(',');
+		$.each(arr, function(i,o) {
+			$("#id"+o)[0].checked=true;
+		});	
+	}
+</script>

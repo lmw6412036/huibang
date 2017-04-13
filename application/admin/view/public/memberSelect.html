@@ -1,0 +1,22 @@
+<label class="form-label col-xs-4 col-sm-3">
+				[label]：
+			</label>
+<div class="formControls col-xs-8 col-sm-9">
+	<span id="fname">
+					[showvalue]
+				</span>
+	<input type="hidden" name="[name]" value="[value]" />
+	<a class="btn btn-primary radius" onclick="showMemberSelect()">选择会员</a>
+	{assign name="callback" value=":uniqid()"/}
+	<script>
+		'{$callback}';
+		function showMemberSelect() {
+			layer_show('选择会员', '{:url("member/select",["type"=>"[type]","callback"=>"callback2"])}', 700, 400)
+		}
+
+		function callback2(id, name) {
+			$('[name="[name]"]').val(id);
+			$('[name="[name]"]').prev().text(name);
+		}
+	</script>
+</div>

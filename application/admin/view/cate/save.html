@@ -1,0 +1,62 @@
+{layout name="layout1" /}
+<article class="page-container">
+	<form class="form form-horizontal" id="form-admin-add" action="{$action}">
+		<input type="hidden" name="type" value="{$Request.param.type}" />
+		{if condition="stristr($action,'save')"}
+		<input type="hidden" name="fid" value="{$fid}" />
+		{if condition="$fid"}
+		<div class="row cl">
+			{php} echo admin_tpl_input('父级','fname',$fname,'请输入账户名','text',[ 'readonly'=>true ]); {/php}
+		</div>
+		{/if}
+		{else/}
+		<div class="row cl">
+			{include file='public/cateSelect' label="父级" name="fid" value="$fid" showvalue="$fname" type='job'}
+		</div>
+		{/if}
+		 
+		
+		<div class="row cl">
+			{php} echo admin_tpl_input('名称','name',$data,'请输入名称','text',[ 'required'=>true ]); {/php}
+		</div>
+		<div class="row cl">
+			{php} echo admin_tpl_input('标识','title',$data,'请输入标识','text',[ ]); {/php}
+		</div>
+		<div class="row cl">
+			{php} echo admin_tpl_input('排序','sort',$data,'请输入排序','text',[ ]); {/php}
+		</div>
+		
+		<div class="row cl">
+			{include file='public/form/checkbox' label='推荐位' name="pos" value="data" data='pos' /}
+		</div>
+		
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+<script type="text/javascript">
+	$('#form-admin-add').validate({
+		rules: {
+			repass: {
+				equalTo: '#pass'
+			}
+		},
+		submitHandler: function(form) {
+			doApi('post', form.action, {
+				data: $(form).serialize()
+			}).success(function(data) {
+				showError(data);
+				if(data.code == 0) {
+					layer.msg('编辑成功', {
+						icon: 1
+					}, function() {
+						parent.location.reload();
+					})
+				}
+			});
+		}
+	});
+</script>

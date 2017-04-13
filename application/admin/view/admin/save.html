@@ -1,0 +1,81 @@
+{layout name="layout1" /}
+<article class="page-container">
+	<form class="form form-horizontal" id="form-admin-add" action="{$action}">
+	
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('账户名','name',$data,'请输入账户名','text',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	{if condition='stristr($action,"save")'}
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('密码','pass',$data,'请输入密码','password',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('确认密码','repass',$data,'请确认密码','password',[
+		'required'=>true
+		]);
+		{/php}
+	</div>
+	{/if}
+	<div class="row cl">
+		{php}
+		echo admin_tpl_radio('性别','sex',$data,$sexArr);
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('手机号','phone',$data,'请输入手机号','text');
+		{/php}
+	</div>
+	<div class="row cl">
+		{php}
+		echo admin_tpl_input('邮箱','email',$data,'请输入邮箱','text');
+		{/php}
+	</div>
+	<div class="row cl">
+		{:admin_tpl_select('角色','role_id',$data,$roles)}
+	</div>
+	<div class="row cl">
+		{:admin_tpl_textarea('备注','desc',$data,[
+			'placeholder'=>'说点什么吧...100个字以内',
+			'total'=>100
+		])}
+	</div>
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+		</div>
+	</div>
+	</form>
+</article>
+<script type="text/javascript">
+	$('#form-admin-add').validate({
+		rules:{
+			repass:{
+				equalTo:'#pass'
+			}
+		},
+		submitHandler:function(form){
+			doApi('post',form.action,{
+				data:$(form).serialize()
+			}).success(function(data){
+				showError(data);
+				if(data.code==0){
+					layer.msg('编辑成功',{
+						icon:1
+					},function(){
+						parent.location.reload();
+					})
+				}
+			});
+		}
+	});
+</script>

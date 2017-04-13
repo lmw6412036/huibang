@@ -1,0 +1,52 @@
+{layout name="layout1" /} 
+{include file="public/nav" f='系统管理' s='会员管理'/}
+
+<div class="">
+	<div class="cl pd-5 bg-1 bk-gray">
+		<span class="r">共有数据：<strong>{$list->total()}</strong> 条</span>
+	</div>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr>
+				<th scope="col" colspan="4">会员列表</th>
+			</tr>
+			<tr class="text-c">
+				<th width="25"><input type="checkbox" name="" value=""></th>
+				<th width="40">ID</th>
+				<th width="150">名称</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{volist name='list' id='vo'}
+			<tr class="text-c">
+				<td><input type="checkbox" value="{$vo.id}" name="ids[]"></td>
+				<td>{$vo.id}</td>
+				<td style="text-align: left;">{$vo.name}</td>
+				<td class="td-manage">
+					<a id="{$vo.id}" name="{$vo.name}" href="javascript:;" onclick="change(this)" class="ml-5" style="text-decoration:none">
+						选择
+					</a>
+				</td>
+			</tr>
+			{/volist}
+			<!--<tr class="text-c">
+				<td><input type="checkbox" value="2" name=""></td>
+				<td>2</td>
+				<td>zhangsan</td>
+				<td>13000000000</td>
+				<td>admin@mail.com</td>
+				<td>栏目编辑</td>
+				<td>2014-6-11 11:11:42</td>
+				<td class="td-status"><span class="label radius">已停用</span></td>
+				<td class="td-manage"><a style="text-decoration:none" onClick="admin_start(this,'10001')" href="javascript:;" title="启用"><i class="Hui-iconfont">&#xe615;</i></a> <a title="编辑" href="javascript:;" onclick="admin_edit('管理员编辑','admin-add.html','2','800','500')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="admin_del(this,'1')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+			</tr>-->
+		</tbody>
+	</table>
+</div>
+<script>
+function change(obj){
+	parent.{$Request.param.callback}($(obj).attr('id'),$(obj).attr('name'));
+	layer_close();
+}
+</script>

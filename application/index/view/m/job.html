@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>找工作-青岛本地餐饮综合服务平台</title>
+    {include file='public/m-meta'/}
+</head>
+<body>
+<!--main start-->
+
+<div class="job_index">
+    <div class="banner component_banner"></div>
+    <div class="nav">
+        <ul>
+            <li class="video">
+                <div class="icon font">&#xe662;</div>
+                <div class="text">视频专区</div>
+            </li>
+            <li class="zhibo">
+                <div class="icon font">&#xe600;</div>
+                <div class="text">直播专区</div>
+            </li>
+            <li class="hot">
+                <div class="icon font">&#xe6f9;</div>
+                <div class="text">名企专区</div>
+            </li>
+        </ul>
+    </div>
+    <div class="filter component_filter">
+        <ul>
+            <li><select name="area" class="area">
+                <option value="">期望区域</option>
+            </select></li>
+            <li><select name="type" class="job">
+                <option value="">职位列表</option>
+            </select></li>
+            <li><select name="salary" class="salary">
+                <option value="">待遇</option>
+            </select></li>
+            <li><select name="workyear" class="workyear">
+                <option value="">经验</option>
+            </select></li>
+        </ul>
+    </div>
+    <div class="list"></div>
+</div>
+<script type="text/javascript" src="{:config('mobile')}/../dist/lib/swiper/swiper.min.js"></script>
+<link rel="stylesheet" href="{:config('mobile')}/../dist/lib/swiper/swiper.min.css">
+<script type="text/javascript" src="{:config('mobile')}/../dist/js/job_job.dist.js"></script>
+
+<!--main end-->
+</body>
+</html>
