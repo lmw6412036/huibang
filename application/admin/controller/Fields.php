@@ -140,7 +140,7 @@ class Fields extends Controller
                 'msg'=>'sql错误：'.$mf->getError()];
         }
         
-        if($post['title']!=$field['title']){
+        if($post['title']!=$field['title']||$post['type']!=$field['type']){
             $field1=$field['title'];
             $field2=$post['title'];
             $table=config("database.prefix").$field['table_name'];
